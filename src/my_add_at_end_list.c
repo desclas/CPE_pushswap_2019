@@ -18,11 +18,6 @@ void my_add_at_end_list(linked_list_t **begin, void *data)
         *begin = new;
         return;
     }
-    if (tnew->data == NULL) {
-        free(new);
-        (*begin)->data = data;
-        return;
-    }
     for (; tnew->next != NULL; tnew = tnew->next);
     tnew->next = new;
 }

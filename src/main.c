@@ -15,11 +15,20 @@ static int print_usage(char *name)
     return (84);
 }
 
+static int all_num(int av, char **ac)
+{
+    for (size_t i = 1; i < av; i++)
+        for (size_t x = 0; ac[i][x] != 0; x++)
+            if (!((ac[i][x] >= '0' && ac[i][x] <= '9') || ac[i][x] == '-'))
+                return (1);
+    return (0);
+}
+
 int main(int av, char **ac)
 {
     linked_list_t *la = NULL;
 
-    if (av < 2)
+    if (av < 2 || all_num(av, ac))
         return (print_usage(ac[0]));
     for (int i = 1; i < av; i++)
         my_add_at_end_list(&la, (void *)((long int)my_getnbr(ac[i])));

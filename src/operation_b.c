@@ -42,7 +42,7 @@ void op_rb(linked_list_t **lb, char **ops)
     tmp = (*lb)->next;
     for (linked_list_t *i = *lb;; i = i->next)
         if (i->next == NULL) {
-            i->next = tmp;
+            i->next = *lb;
             break;
         }
     (*lb)->next = NULL;

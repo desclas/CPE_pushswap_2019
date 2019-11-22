@@ -41,7 +41,7 @@ void op_ra(linked_list_t **la, char **ops)
     tmp = (*la)->next;
     for (linked_list_t *i = *la;; i = i->next)
         if (i->next == NULL) {
-            i->next = tmp;
+            i->next = *la;
             break;
         }
     (*la)->next = NULL;

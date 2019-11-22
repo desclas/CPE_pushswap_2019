@@ -33,7 +33,7 @@ void op_rr(linked_list_t **la, linked_list_t **lb, char **ops)
     tmp = (*la)->next;
     for (linked_list_t *i = *la;; i = i->next)
         if (i->next == NULL) {
-            i->next = tmp;
+            i->next = *lb;
             break;
         }
     (*la)->next = NULL;
@@ -41,7 +41,7 @@ void op_rr(linked_list_t **la, linked_list_t **lb, char **ops)
     tmp = (*lb)->next;
     for (linked_list_t *i = *lb;; i = i->next)
         if (i->next == NULL) {
-            i->next = tmp;
+            i->next = *lb;
             break;
         }
     (*lb)->next = NULL;

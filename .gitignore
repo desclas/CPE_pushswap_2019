@@ -2,3 +2,5 @@
 **/*.a
 **/*.gc*
 push_swap
+*test*
+log

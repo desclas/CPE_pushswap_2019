@@ -7,27 +7,12 @@
 
 #include "my_pushswap.h"
 
-static long int pick_first(linked_list_t *lnk)
-{
-    if (lnk == NULL || lnk->data == NULL)
-        return (-(__INT_MAX__ - 2));
-    return ((long int)lnk->data);
-}
-
-static long int pick_last(linked_list_t *lnk)
-{
-    linked_list_t *tmp = lnk;
-
-    if (lnk == NULL || lnk->data == NULL)
-        return (-(__INT_MAX__ - 2));
-    for (; tmp->next != NULL; tmp = tmp->next);
-    return ((long int)tmp->data);
-}
-
 static int is_in_order(linked_list_t *lnk, char order)
 {
     linked_list_t *tmp = lnk;
 
+    if (tmp == NULL)
+        return (0);
     for (; tmp->next != NULL; tmp = tmp->next)
         if (((order == UP) ? tmp->data > tmp->next->data :
             tmp->data < tmp->next->data))
@@ -48,25 +33,41 @@ static linked_list_t *print_ops(char *ops, linked_list_t *la)
     return (la);
 }
 
+static long int find_min(linked_list_t *lnk, char *direc)
+{
+    long int min = (long int)lnk->data;
+    long int pos = 0;
+    long int i = 1;
+
+    for (linked_list_t *tmp = lnk->next; tmp != NULL; tmp = tmp->next, i++)
+        if (min > (long int)tmp->data) {
+            min = (long int)tmp->data;
+            pos = i;
+        }
+    *direc = ((pos > (i / 2)) ? UP : DOWN);
+    pos = ((pos > (i / 2)) ? i - pos : pos);
+    return (pos);
+}
+
 linked_list_t *algo(linked_list_t *la, linked_list_t *lb)
 {
-    linked_list_t *tmp;
-    char *ops = malloc(sizeof(char));
-    ops[0] = '\0';
-    while (is_in_order(la, UP) || is_in_order(lb, DOWN)) {
-        for (;la != NULL && la->next != NULL && pick_first(la) > pick_last(la);)
-            op_ra(&la, &ops);
-        for (;lb != NULL && lb->next != NULL && pick_first(lb) < pick_last(lb);)
-            op_ra(&lb, &ops);
-        for (tmp = la; tmp != NULL; tmp = tmp->next)
-            if (tmp->next != NULL && tmp->data > tmp->next->data)
-                break;
-        if (tmp != NULL) {
-            for (; la != tmp; op_pb(&lb, &la, &ops));
-            op_sa(la, &ops);
-        }
-        if (la == NULL)
-            for (; lb != NULL; op_pa(&la, &lb, &ops));
+    char *ops = my_strdup("\0");
+    char direc = 0;
+    long int nb = 0;
+    if (!is_in_order(la, UP))
+        return (print_ops(ops, la));
+    for (;; op_pb(&lb, &la, &ops)) {
+        if (la->next == NULL || (lb != NULL && !is_in_order(la, UP) &&
+            la->data > lb->data))
+            break;
+        nb = find_min(la, &direc);
+        for (; direc == UP && nb > 0; nb--)
+            op_rra(&la, &ops);
+        for (; direc == DOWN && nb > 0; nb--)
+            if (nb == 1)
+                op_sa(la, &ops);
+            else
+                op_ra(&la, &ops);
     }
     for (; lb != NULL; op_pa(&la, &lb, &ops));
     return (print_ops(ops, la));
