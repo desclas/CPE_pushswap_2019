@@ -17,7 +17,7 @@ static int print_usage(char *name)
 
 static int all_num(int av, char **ac)
 {
-    for (size_t i = 1; i < av; i++)
+    for (int i = 1; i < av; i++)
         for (size_t x = 0; ac[i][x] != 0; x++)
             if (!((ac[i][x] >= '0' && ac[i][x] <= '9') || ac[i][x] == '-'))
                 return (1);
